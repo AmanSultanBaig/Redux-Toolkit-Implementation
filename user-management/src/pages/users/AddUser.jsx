@@ -3,10 +3,9 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { createNewUser } from "../../store/slices/userSlice";
 
-export const AddUser = () => {
+export const AddUser = ({ toggle, isModalShow }) => {
   const dispatch = useDispatch();
 
-  const [show, setShow] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", comments: "" });
 
   const userOnChangeHandler = (e) => {
@@ -22,21 +21,13 @@ export const AddUser = () => {
 
   const createUser = () => {
     dispatch(createNewUser(user));
-    setShow(false);
+    toggle(false);
     resetForm();
   };
 
   return (
     <>
-      <Button
-        variant="secondary"
-        className="btn btn-sm"
-        onClick={() => setShow(true)}
-      >
-        Add User
-      </Button>
-
-      <Modal show={show} onHide={() => setShow(false)}>
+      <Modal show={isModalShow} onHide={() => toggle(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add User</Modal.Title>
         </Modal.Header>
@@ -78,7 +69,7 @@ export const AddUser = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>
+          <Button variant="secondary" onClick={() => toggle(false)}>
             Close
           </Button>
           <Button

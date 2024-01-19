@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../../store/slices/userSlice";
 import { AddUser } from "./AddUser";
@@ -6,11 +7,19 @@ import { AddUser } from "./AddUser";
 export const UserList = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state);
+  const [show, setShow] = useState(false);
+
   return (
     <div className="row d-flex mt-4">
       <div className="col-md-10 fw-bold">User Managemet</div>
       <div className="d-flex col-md-2 justify-content-end">
-        <AddUser />
+        <Button
+          variant="secondary"
+          className="btn btn-sm"
+          onClick={() => setShow(true)}
+        >
+          Add User
+        </Button>{" "}
       </div>
 
       <div className="col-md-12">
@@ -47,6 +56,7 @@ export const UserList = () => {
           </tbody>
         </table>
       </div>
+      <AddUser isModalShow={show} toggle={() => setShow(!show)} />
     </div>
   );
 };

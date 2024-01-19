@@ -1,8 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser } from "../../store/slices/userSlice";
 import { AddUser } from "./AddUser";
 
 export const UserList = () => {
+  const dispatch = useDispatch();
   const { users } = useSelector((state) => state);
   return (
     <div className="row d-flex mt-4">
@@ -33,7 +35,12 @@ export const UserList = () => {
                 <td>
                   <button className="btn btn-sm btn-primary">Edit</button>{" "}
                   &nbsp;
-                  <button className="btn btn-sm btn-danger">Delete</button>
+                  <button
+                    onClick={() => dispatch(removeUser(i))}
+                    className="btn btn-sm btn-danger"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

@@ -7,7 +7,18 @@ import { AddUser } from "./AddUser";
 export const UserList = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state);
+
   const [show, setShow] = useState(false);
+  const [user, setUser] = useState({ name: "", email: "", comments: "" });
+
+  const updateUser = (newUserData) => {
+    setUser(newUserData);
+  };
+
+  const getUser = (user) => {
+    setUser(user);
+    setShow(true);
+  };
 
   return (
     <div className="row d-flex mt-4">
@@ -42,7 +53,12 @@ export const UserList = () => {
                 <td>{user.email}</td>
                 <td>{user.comments || "N / A"}</td>
                 <td>
-                  <button className="btn btn-sm btn-primary">Edit</button>{" "}
+                  <button
+                    onClick={() => getUser(user)}
+                    className="btn btn-sm btn-primary"
+                  >
+                    Edit
+                  </button>{" "}
                   &nbsp;
                   <button
                     onClick={() => dispatch(removeUser(i))}
@@ -56,7 +72,12 @@ export const UserList = () => {
           </tbody>
         </table>
       </div>
-      <AddUser isModalShow={show} toggle={() => setShow(!show)} />
+      <AddUser
+        user={user}
+        updateUser={updateUser}
+        isModalShow={show}
+        toggle={() => setShow(!show)}
+      />
     </div>
   );
 };

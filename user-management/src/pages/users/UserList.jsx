@@ -8,16 +8,20 @@ export const UserList = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state);
 
+  const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", comments: "" });
 
   const updateUser = (newUserData) => {
     setUser(newUserData);
   };
 
-  const getUser = (user) => {
+  const getUser = (user, i) => {
     setUser(user);
     setShow(true);
+    setIndex(i);
+    setIsEdit(true);
   };
 
   return (
@@ -54,7 +58,7 @@ export const UserList = () => {
                 <td>{user.comments || "N / A"}</td>
                 <td>
                   <button
-                    onClick={() => getUser(user)}
+                    onClick={() => getUser(user, i)}
                     className="btn btn-sm btn-primary"
                   >
                     Edit
@@ -76,7 +80,10 @@ export const UserList = () => {
         user={user}
         updateUser={updateUser}
         isModalShow={show}
+        index={index}
+        isEdit={isEdit}
         toggle={() => setShow(!show)}
+        setIsEdit={setIsEdit}
       />
     </div>
   );

@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { createNewUser } from "../../store/slices/userSlice";
+import { createNewUser, editUserInfo } from "../../store/slices/userSlice";
 
-export const AddUser = ({ toggle, isModalShow, updateUser, user }) => {
+export const AddUser = ({
+  toggle,
+  isModalShow,
+  updateUser,
+  user,
+  index,
+  isEdit,
+  setIsEdit,
+}) => {
   const dispatch = useDispatch();
-  const [localUser, setLocalUser] = useState({
-    name: "",
-    email: "",
-    comments: "",
-  });
 
   useEffect(() => {
-    setLocalUser(user);
-  }, [user]);
+    updateUser(user);
+  }, [user, isEdit]);
 
   const userOnChangeHandler = (e) => {
     updateUser({
@@ -23,12 +26,17 @@ export const AddUser = ({ toggle, isModalShow, updateUser, user }) => {
   };
 
   const resetForm = () => {
-    setLocalUser({ name: "", email: "", comments: "" });
+    updateUser({ name: "", email: "", comments: "" });
     toggle(false);
+    setIsEdit(false);
   };
 
   const createUser = () => {
-    dispatch(createNewUser(user));
+    if (!isEdit) {
+      dispatch(createNewUser(user));
+    } else {
+      dispatch(editUserInfo({ index, data: user }));
+    }
     resetForm();
   };
 
@@ -36,7 +44,7 @@ export const AddUser = ({ toggle, isModalShow, updateUser, user }) => {
     <>
       <Modal show={isModalShow} onHide={resetForm}>
         <Modal.Header closeButton>
-          <Modal.Title>Add User</Modal.Title>
+          <Modal.Title>{isEdit ? "Edit" : "Add"} User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -45,7 +53,7 @@ export const AddUser = ({ toggle, isModalShow, updateUser, user }) => {
               <Form.Control
                 onChange={userOnChangeHandler}
                 name="name"
-                value={localUser.name}
+                value={user.name}
                 type="text"
                 placeholder="Name"
               />
@@ -53,7 +61,7 @@ export const AddUser = ({ toggle, isModalShow, updateUser, user }) => {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Email *</Form.Label>
               <Form.Control
-                value={localUser.email}
+                value={user.email}
                 type="email"
                 onChange={userOnChangeHandler}
                 name="email"
@@ -68,7 +76,7 @@ export const AddUser = ({ toggle, isModalShow, updateUser, user }) => {
               <Form.Control
                 onChange={userOnChangeHandler}
                 name="comments"
-                value={localUser.comments}
+                value={user.comments}
                 as="textarea"
                 rows={3}
               />
@@ -80,7 +88,7 @@ export const AddUser = ({ toggle, isModalShow, updateUser, user }) => {
             Close
           </Button>
           <Button
-            disabled={!localUser.name || !localUser.email}
+            disabled={!user.name || !user.email}
             variant="primary"
             onClick={createUser}
           >
